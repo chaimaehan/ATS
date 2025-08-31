@@ -1,0 +1,104 @@
+<% layout = 'layout' %>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-top: 20px;
+    }
+    h2 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+    .badge {
+        margin-right: 8px;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        padding: 6px 12px;
+    }
+    .score-high { color: #27ae60; font-weight: bold; }
+    .score-medium { color: #f39c12; font-weight: bold; }
+    .score-low { color: #e74c3c; font-weight: bold; }
+    .table {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    .table thead {
+        background-color: #3498db;
+        color: white;
+    }
+    .table tbody tr:hover {
+        background-color: #f1f9ff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-1px);
+    }
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>🔍 Résultats du scan ATS personnalisé</h2>
+
+    <p>Mots-clés recherchés : 
+        <% keywords.forEach((kw, i) => { %>
+            <span class="badge bg-primary"><%= kw %></span>
+        <% }) %>
+    </p>
+
+    <% if (results.length === 0) { %>
+        <div class="alert alert-warning">Aucun candidat trouvé.</div>
+    <% } else { %>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Score (%)</th>
+                    <th>Matchs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% results.forEach(c => { %>
+                    <tr>
+                        <td><%= c.name %></td>
+                        <td><%= c.email %></td>
+                        <td>
+                            <span class="<% if (c.score >= 70) { %>score-high<% } else if (c.score >= 50) { %>score-medium<% } else { %>score-low<% } %>">
+                                <%= c.score %>%
+                            </span>
+                        </td>
+                        <td><%= c.matchCount %> / <%= c.totalKeywords %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <a href="/dashboard" class="btn btn-secondary mt-3">⬅ Retour au tableau de bord</a>
+</div>

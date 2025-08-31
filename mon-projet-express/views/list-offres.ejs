@@ -1,0 +1,15 @@
+
+<h1>📋 Liste des Offres</h1>
+
+<ul>
+  <% offres.forEach(offre => { %>
+    <li>
+      <%= offre.title %> - <%= offre.location %>
+      <a href="/offres/<%= offre.id %>/edit">✏️ Modifier</a>
+
+      <form action="/offres/<%= offre.id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" onclick="return confirm('Supprimer cette offre ?')">🗑 Supprimer</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>

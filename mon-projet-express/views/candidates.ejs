@@ -1,0 +1,256 @@
+<% layout = 'layout' %>
+
+<style>
+    body {
+        background: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        color: #3f37c9;
+        font-weight: bold;
+    }
+
+    .filter-section {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 30px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #3f37c9;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(30px);
+    }
+
+    .filter-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .stats-badge {
+        background: #e7f3ff;
+        color: #3f37c9;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+
+    .card {
+        border-radius: 15px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+        color: #3f37c9;
+        font-weight: 600;
+    }
+
+    .card-text strong {
+        color: #555;
+    }
+
+    .btn-primary {
+        background: #3f37c9;
+        border: none;
+        border-radius: 8px;
+        transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+        background: #4361ee;
+    }
+
+    .btn-success {
+        background: #38b000;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .btn-success:hover {
+        background: #2a9d00;
+    }
+
+    .btn-warning {
+        background: #ffba08;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .btn-warning:hover {
+        background: #e6a600;
+    }
+
+    .btn-danger {
+        border-radius: 8px;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+    }
+
+    .card-footer {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .applied-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #38b000;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7em;
+        font-weight: 600;
+    }
+
+    .card {
+        position: relative;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .no-results i {
+        font-size: 4em;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+</style>
+
+<h1 class="mb-4">👤 Liste des candidats</h1>
+
+<div class="filter-section">
+    <div class="toggle-container">
+        <span class="filter-label">Tous les candidats</span>
+
+        <label class="toggle-switch">
+            <input type="checkbox" id="applicationFilter" onchange="toggleFilter()">
+            <span class="slider"></span>
+        </label>
+
+        <span class="filter-label">Candidats avec candidatures</span>
+
+        <div class="stats-badge" id="statsDisplay">
+            Total: <%= candidates.length %> candidat<%= candidates.length > 1 ? 's' : '' %>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="candidatesContainer">
+    <% candidates.forEach(c => { %>
+        <div class="col candidate-card" data-has-application="<%= c.has_application ? 'true' : 'false' %>">
+            <div class="card h-100 shadow-sm">
+                <% if (c.has_application) { %>
+                    <div class="applied-badge">✓ Candidature</div>
+                <% } %>
+
+                <div class="card-body">
+                    <h5 class="card-title"><%- c.name || 'N/A' %></h5>
+                    <p class="card-text">
+                        <strong>📧 Email :</strong> <%- c.email || 'N/A' %><br>
+                        <strong>📞 Téléphone :</strong> <%- c.phone || 'N/A' %><br>
+                        <strong>🛠 Compétences :</strong> <%- c.skills || 'N/A' %><br>
+                        <strong>🌍 Langues :</strong> <%- c.languages || 'N/A' %><br>
+                        <strong>📅 Date :</strong> <%- c.upload_date || 'N/A' %>
+                        <% if (c.has_application) { %>
+                            <br><strong>💼 Candidatures :</strong> <span class="text-success"><%= c.application_count %> offre<%= c.application_count > 1 ? 's' : '' %></span>
+                        <% } %>
+                    </p>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <a href="/candidates/edit/<%= c.id %>" class="btn btn-sm btn-primary">✏️ Éditer</a>
+
+                    <% if (c.cv_filename) { %>
+                        <a href="/candidates/view/<%= c.id %>" class="btn btn-sm btn-success">📄 Voir CV</a>
+                    <% } else { %>
+                        <span class="text-muted small">Aucun CV</span>
+                    <% } %>
+
+                    <% if (c.email) { %>
+                        <a href="mailto:<%- c.email %>" class="btn btn-sm btn-outline-secondary">📬 Contacter</a>
+                    <% } %>
+
+                    <a href="/scan-custom?c=<%= c.id %>" class="btn btn-sm btn-warning">🔍 Scanner</a>
+
+                    <form action="/candidates/delete/<%= c.id %>" method="POST" onsubmit="return confirm('Confirmer la suppression ?');" style="margin:0;">
+                        <button type="submit" class="btn btn-sm btn-danger">🗑 Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% }) %>
+</div>
+
+<div id="noResults" class="no-results" style="display: none;">
+    <i>👥</i>
+    <h3>Aucun candidat trouvé</h3>
+    <p>Aucun candidat ne correspond aux critères de filtrage sélectionnés.</p>
+</div>
+
+<p class="mt-4 text-center">
+    <a href="/dashboard" class="btn btn-secondary">⬅ Retour au dashboard</a>
+</p>
+
+<script src="/js/candidatesFilter.js" defer></script>

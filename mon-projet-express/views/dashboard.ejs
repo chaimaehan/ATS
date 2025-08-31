@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - Ménara Holding</title>
+    <style>
+        /* Modern CSS Variables & Reset */
+        :root {
+            --primary: #6366f1;
+            --primary-light: #8b5cf6;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-light: #34d399;
+            --secondary-dark: #059669;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --info: #3b82f6;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            --white: #ffffff;
+            --black: #000000;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s ease-in-out;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Enhanced Layout */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 100vh;
+            background: transparent;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .brand-text h1 {
+            color: var(--gray-800);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .brand-text p {
+            color: var(--gray-500);
+            font-size: 12px;
+        }
+
+        /* Navigation */
+        .nav-section {
+            flex: 1;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 60px;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link i {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* User Section */
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ec4899, var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 14px;
+        }
+
+        .user-role {
+            color: var(--gray-500);
+            font-size: 12px;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger);
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* CORRECTION: Style pour la section de bienvenue */
+        .welcome-section {
+            width: 100%;
+            margin-bottom: 0; /* Enlever le margin-bottom qui pourrait causer des problèmes */
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Notifications Styles */
+        .notifications-container {
+            position: relative;
+            margin-right: 1rem;
+        }
+
+        .notification-trigger {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-xl);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+        }
+
+        .notification-trigger:hover {
+            background: rgba(255, 255, 255, 1);
+            color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .notifications-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 380px;
+            max-height: 500px;
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+            animation: scaleIn 0.2s ease-out;
+        }
+
+        .notifications-dropdown.show {
+            display: block;
+        }
+
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .notifications-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin: 0;
+        }
+
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .mark-all-read:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .notifications-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--gray-50);
+        }
+
+        .notification-item.unread {
+            background: rgba(99, 102, 241, 0.02);
+            border-left: 3px solid var(--primary);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .notification-icon.new-cv {
+            background: linear-gradient(135deg, var(--success), var(--secondary-dark));
+        }
+
+        .notification-icon.match {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .notification-icon.interview {
+            background: linear-gradient(135deg, var(--accent), #ea580c);
+        }
+
+        .notification-icon.system {
+            background: linear-gradient(135deg, var(--gray-600), var(--gray-700));
+        }
+
+        .notification-icon.report {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.25rem;
+            font-size: 14px;
+        }
+
+        .notification-text {
+            color: var(--gray-600);
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            color: var(--gray-500);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .notification-item:not(.unread) .notification-dot {
+            display: none;
+        }
+
+        .notifications-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .view-all-notifications {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .view-all-notifications:hover {
+            color: var(--primary-dark);
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), #ec4899);
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .action-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-card:nth-child(1) .action-icon {
+            background: linear-gradient(135deg, #3b82f6, var(--primary-dark));
+        }
+
+        .action-card:nth-child(2) .action-icon {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        }
+
+        .action-card:nth-child(3) .action-icon {
+            background: linear-gradient(135deg, var(--accent), #ea580c);
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .action-description {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Dashboard Analytics */
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .view-all-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .view-all-link:hover {
+            color: var(--primary-dark);
+            transform: translateX(2px);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        /* Recent Applications Table */
+        .table-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-100);
+        }
+
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background: var(--gray-50);
+        }
+
+        .table-header th {
+            padding: 1rem 1.5rem;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table-row {
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition);
+        }
+
+        .table-row:hover {
+            background: var(--gray-50);
+        }
+
+        .table-row td {
+            padding: 1rem 1.5rem;
+            vertical-align: middle;
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .candidate-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-200);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .candidate-name {
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        .score-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-bar {
+            width: 80px;
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .score-text {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 13px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: #ecfdf5;
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .time-info {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        /* Chatbot - Enhanced */
+        .chatbot {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chatbot-trigger {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-trigger:hover {
+            transform: scale(1.1);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.4);
+        }
+
+        .chatbot-window {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            max-height: 500px;
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .chatbot-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .chatbot-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .chatbot-messages {
+            height: 300px;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--gray-50);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-lg);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-bubble {
+            background: var(--white);
+            color: var(--gray-800);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .chatbot-input-container {
+            padding: 1rem;
+            background: var(--white);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .chatbot-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-fade-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .animate-scale {
+            animation: scaleIn 0.4s ease-out forwards;
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Color variants for metric icons */
+        .metric-card:nth-child(1) .metric-icon {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .metric-card:nth-child(2) .metric-icon {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .metric-card:nth-child(3) .metric-icon {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .metric-card:nth-child(4) .metric-icon {
+            background: linear-gradient(135deg, var(--accent), #d97706);
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Focus styles for accessibility */
+        .nav-link:focus,
+        .btn:focus,
+        .search-input:focus,
+        .chatbot-trigger:focus,
+        .notification-trigger:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .chatbot-window {
+                width: 300px;
+                right: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" role="navigation">
+            <div class="logo-section">
+                <div class="logo">MH</div>
+                <div class="brand-text">
+                    <h1>Ménara Holding</h1>
+                    <p>Système RH</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="nav-section">
+                <div class="nav-title">Actions Rapides</div>
+                <div class="nav-links">
+                    <a href="/upload" class="nav-link">
+                        <i data-lucide="upload"></i>
+                        <div>
+                            <div style="font-weight: 600;">Ajouter un CV</div>
+                            <div style="font-size: 11px; color: var(--gray-400); margin-top: 2px;">Télécharger et analyser</div>
+                        </div>
+                    </a>
+                    <a href="/candidates" class="nav-link">
+                        <i data-lucide="users"></i>
+                        <div>
+                            <div style="font-weight: 600;">Voir Candidats</div>
+                            <div style="font-size: 11px; color: var(--gray-400); margin-top: 2px;">1,247 profils disponibles</div>
+                        </div>
+                    </a>
+                    <a href="/offres" class="nav-link">
+                        <i data-lucide="briefcase"></i>
+                        <div>
+                            <div style="font-weight: 600;">Gérer Offres</div>
+                            <div style="font-size: 11px; color: var(--gray-400); margin-top: 2px;">23 offres actives</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- AI Search in Sidebar -->
+                <div class="nav-title" style="margin-top: 2rem;">Recherche IA</div>
+                <div style="padding: 0 1rem;">
+                    <form action="/scan-custom" method="POST" style="margin-bottom: 1rem;">
+                        <input
+                            type="text"
+                            name="keywords"
+                            placeholder="React, Python, Designer..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-lg); font-size: 13px; outline: none; transition: var(--transition);"
+                            required
+                        />
+                        <button 
+                            type="submit" 
+                            style="width: 100%; margin-top: 0.5rem; background: linear-gradient(135deg, var(--accent), #ea580c); color: white; border: none; padding: 0.75rem; border-radius: var(--radius-lg); font-weight: 600; cursor: pointer; font-size: 13px; transition: var(--transition);"
+                        >
+                            <i data-lucide="search" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i>
+                            Rechercher
+                        </button>
+                    </form>
+                </div>
+
+                <div class="nav-title" style="margin-top: 2rem;">Navigation</div>
+                <div class="nav-links">
+                    <a href="/" class="nav-link active">
+                        <i data-lucide="home"></i>
+                        Tableau de Bord
+                    </a>
+                    <a href="/analytics" class="nav-link">
+                        <i data-lucide="bar-chart-3"></i>
+                        Analytiques
+                    </a>
+                    <a href="/reports" class="nav-link">
+                        <i data-lucide="file-text"></i>
+                        Rapports
+                    </a>
+                    <a href="/settings" class="nav-link">
+                        <i data-lucide="settings"></i>
+                        Paramètres
+                    </a>
+                </div>
+            </div>
+
+            <div class="user-section">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Administrateur</div>
+                </div>
+                <a href="/logout" class="logout-btn">
+                    <i data-lucide="log-out"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section animate-fade-up">
+                <header class="content-header">
+                    <div>
+                        <h1 class="page-title">Bienvenue sur votre Tableau de Bord</h1>
+                        <p class="page-subtitle">Gérez efficacement vos recrutements avec l'intelligence artificielle</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <!-- Notifications -->
+                        <div class="notifications-container">
+                            <button class="notification-trigger" id="notification-trigger" aria-label="Notifications">
+                                <i data-lucide="bell"></i>
+                                <span class="notification-badge" id="notification-count">3</span>
+                            </button>
+                            
+                            <div class="notifications-dropdown" id="notifications-dropdown">
+                                <div class="notifications-header">
+                                    <h3>Notifications</h3>
+                                    <button class="mark-all-read" id="mark-all-read">
+                                        <i data-lucide="check-check"></i>
+                                        Tout marquer lu
+                                    </button>
+                                </div>
+                                <div class="notifications-list">
+                                    <div class="notification-item unread">
+                                        <div class="notification-icon new-cv">
+                                            <i data-lucide="user-plus"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">Nouveau CV reçu</div>
+                                            <div class="notification-text">Marie Dubois - Développeur React Senior</div>
+                                            <div class="notification-time">Il y a 2 minutes</div>
+                                        </div>
+                                        <div class="notification-dot"></div>
+                                    </div>
+                                    
+                                    <div class="notification-item unread">
+                                        <div class="notification-icon match">
+                                            <i data-lucide="target"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">Match parfait trouvé</div>
+                                            <div class="notification-text">Ahmed Lahlou correspond à 96% pour Data Scientist</div>
+                                            <div class="notification-time">Il y a 15 minutes</div>
+                                        </div>
+                                        <div class="notification-dot"></div>
+                                    </div>
+                                    
+                                    <div class="notification-item unread">
+                                        <div class="notification-icon interview">
+                                            <i data-lucide="calendar"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">Entretien programmé</div>
+                                            <div class="notification-text">Pierre Martin - Demain à 14h30</div>
+                                            <div class="notification-time">Il y a 1 heure</div>
+                                        </div>
+                                        <div class="notification-dot"></div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon system">
+                                            <i data-lucide="settings"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">Mise à jour système</div>
+                                            <div class="notification-text">Nouvelles fonctionnalités IA disponibles</div>
+                                            <div class="notification-time">Il y a 2 heures</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="notification-item">
+                                        <div class="notification-icon report">
+                                            <i data-lucide="bar-chart"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">Rapport mensuel</div>
+                                            <div class="notification-text">Votre rapport RH de décembre est prêt</div>
+                                            <div class="notification-time">Il y a 3 heures</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="notifications-footer">
+                                    <a href="/notifications" class="view-all-notifications">
+                                        Voir toutes les notifications
+                                        <i data-lucide="arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="breadcrumb">
+                            <i data-lucide="home"></i>
+                            <span>Accueil</span>
+                            <i data-lucide="chevron-right"></i>
+                            <span>Dashboard</span>
+                        </div>
+                    </div>
+                </header>
+            </section>
+
+            <!-- Dashboard Analytics -->
+            <section class="dashboard-section animate-fade-up" style="animation-delay: 0.5s">
+                <div class="section-header">
+                    <h2 class="section-title">Aperçu des Performances</h2>
+                    <a href="/analytics" class="view-all-link">
+                        Voir détails
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card animate-scale" style="animation-delay: 0.6s">
+                        <div class="metric-header">
+                            <span class="metric-title">Candidatures Totales</span>
+                            <div class="metric-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">20</div>
+                        <div class="metric-change">+12% vs mois dernier</div>
+                    </div>
+
+                    <div class="metric-card animate-scale" style="animation-delay: 0.7s">
+                        <div class="metric-header">
+                            <span class="metric-title">Offres Actives</span>
+                            <div class="metric-icon">
+                                <i data-lucide="briefcase"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">10</div>
+                        <div class="metric-change">+3 nouvelles cette semaine</div>
+                    </div>
+
+                    <div class="metric-card animate-scale" style="animation-delay: 0.8s">
+                        <div class="metric-header">
+                            <span class="metric-title">CVs Analysés IA</span>
+                            <div class="metric-icon">
+                                <i data-lucide="cpu"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">25</div>
+                        <div class="metric-change">+18% vs mois dernier</div>
+                    </div>
+
+                    <div class="metric-card animate-scale" style="animation-delay: 0.9s">
+                        <div class="metric-header">
+                            <span class="metric-title">Taux de Matching</span>
+                            <div class="metric-icon">
+                                <i data-lucide="target"></i>
+                            </div>
+                        </div>
+                        <div class="metric-value">78%</div>
+                        <div class="metric-change">+5% amélioration</div>
+                    </div>
+                </div>
+
+                <!-- Recent Applications Table -->
+                <div class="section-header" style="margin-top: 2rem;">
+                    <h3 class="section-title">Candidatures Récentes</h3>
+                    <a href="/candidates" class="view-all-link">
+                        Voir toutes
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="table-container animate-fade-up" style="animation-delay: 1s">
+                    <table class="applications-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th>Candidat</th>
+                                <th>Poste Ciblé</th>
+                                <th>Score IA</th>
+                                <th>Statut</th>
+                                <th>Ajouté</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-avatar">AN</div>
+                                        <div class="candidate-name">Alloui Nourdine</div>
+                                    </div>
+                                </td>
+                                <td>Développeur React Senior</td>
+                                <td>
+                                    <div class="score-container">
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 95%;"></div>
+                                        </div>
+                                        <span class="score-text">95%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-badge status-pending">
+                                        <i data-lucide="clock"></i>
+                                        En attente
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="time-info">
+                                        <i data-lucide="calendar"></i>
+                                        Il y a 2h
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-avatar">YE</div>
+                                        <div class="candidate-name">Yassine Elho</div>
+                                    </div>
+                                </td>
+                                <td>Chef de Projet IT</td>
+                                <td>
+                                    <div class="score-container">
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 88%;"></div>
+                                        </div>
+                                        <span class="score-text">88%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-badge status-approved">
+                                        <i data-lucide="check-circle"></i>
+                                        Approuvé
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="time-info">
+                                        <i data-lucide="calendar"></i>
+                                        Il y a 4h
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-avatar">AA</div>
+                                        <div class="candidate-name">Aymane Amire</div>
+                                    </div>
+                                </td>
+                                <td>UX/UI Designer</td>
+                                <td>
+                                    <div class="score-container">
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 92%;"></div>
+                                        </div>
+                                        <span class="score-text">92%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-badge status-pending">
+                                        <i data-lucide="clock"></i>
+                                        En attente
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="time-info">
+                                        <i data-lucide="calendar"></i>
+                                        Il y a 6h
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-avatar">AL</div>
+                                        <div class="candidate-name">Ahmed Lahlou</div>
+                                    </div>
+                                </td>
+                                <td>Data Scientist</td>
+                                <td>
+                                    <div class="score-container">
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 96%;"></div>
+                                        </div>
+                                        <span class="score-text">96%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-badge status-approved">
+                                        <i data-lucide="check-circle"></i>
+                                        Approuvé
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="time-info">
+                                        <i data-lucide="calendar"></i>
+                                        Il y a 1j
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td>
+                                    <div class="candidate-info">
+                                        <div class="candidate-avatar">FZ</div>
+                                        <div class="candidate-name">Fatima Zahra</div>
+                                    </div>
+                                </td>
+                                <td>Marketing Manager</td>
+                                <td>
+                                    <div class="score-container">
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 85%;"></div>
+                                        </div>
+                                        <span class="score-text">85%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="status-badge status-rejected">
+                                        <i data-lucide="x-circle"></i>
+                                        Rejeté
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="time-info">
+                                        <i data-lucide="calendar"></i>
+                                        Il y a 1j
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Enhanced Chatbot -->
+    <div class="chatbot">
+        <button class="chatbot-trigger" id="chatbot-trigger" aria-label="Ouvrir l'assistant IA">
+            <i data-lucide="message-circle"></i>
+        </button>
+        
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <div class="chatbot-title">Assistant IA RH</div>
+                <div class="chatbot-subtitle">Je suis là pour vous aider</div>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message bot">
+                    <div class="message-bubble">
+                        👋 Bonjour ! Je suis votre assistant IA pour le système RH. Comment puis-je vous aider aujourd'hui ?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <input
+                    type="text"
+                    class="chatbot-input"
+                    id="chatbot-input"
+                    placeholder="Posez votre question..."
+                    autocomplete="off"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/lucide.min.js"></script>
+    <script src="/js/chatbot.js" defer></script>
+</body>
+</html>

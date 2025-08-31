@@ -1,0 +1,12 @@
+<% layout = 'layout' %>
+
+<h1 class="mb-4">📄 Soumettre votre CV</h1>
+
+<form action="/candidature" method="POST" enctype="multipart/form-data" class="border p-4 rounded bg-light">
+  <div class="mb-3">
+    <label for="cv" class="form-label">Fichier CV (PDF uniquement)</label>
+    <input type="file" name="cv" id="cv" accept=".pdf" class="form-control" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">📤 Envoyer</button>
+</form>

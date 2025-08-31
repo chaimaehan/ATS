@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Ménara Holding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Masquer le header du layout sur la page de login */
+        header {
+            display: none !important;
+        }
+
+        /* Masquer le container du layout */
+        .container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            overflow: hidden;
+            padding-top: 80px; /* Espace pour le logo */
+        }
+
+        /* Logo en haut à gauche de la page */
+        .page-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .page-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .page-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Particules d'arrière-plan */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 25px; height: 25px; left: 70%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 12px; height: 12px; left: 80%; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 18px; height: 18px; left: 60%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            50% { transform: translateY(-100px) rotate(180deg); }
+        }
+
+        /* Container principal */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        /* Card de connexion */
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo et titre - Version simplifiée */
+        .logo-section {
+            margin-bottom: 40px;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .company-name {
+            color: #4f46e5;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* Messages d'erreur */
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #dc2626;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ef4444;
+            font-weight: 500;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #059669;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #10b981;
+            font-weight: 500;
+        }
+
+        /* Formulaire */
+        .login-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-input:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover {
+            border-color: #d1d5db;
+        }
+
+        /* Icônes dans les inputs */
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .form-group:has(.form-input:focus) .input-icon {
+            color: #4f46e5;
+        }
+
+        /* Options de connexion */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4f46e5;
+        }
+
+        .forgot-password {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #3730a3;
+            text-decoration: underline;
+        }
+
+        /* Bouton de connexion */
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-button:hover::before {
+            left: 100%;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .version-info {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .page-logo {
+                top: 15px;
+                left: 15px;
+            }
+            
+            .page-logo img {
+                width: 50px;
+                height: 50px;
+            }
+            
+            body {
+                padding-top: 70px;
+            }
+            
+            .login-container {
+                padding: 10px;
+            }
+            
+            .login-card {
+                padding: 40px 25px;
+            }
+            
+            .login-title {
+                font-size: 28px;
+            }
+            
+            .login-options {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Masquer le logo en bas à gauche sur les écrans plus larges */
+        @media (min-width: 481px) {
+            .login-container::after {
+                display: none;
+            }
+        }
+
+        /* Animations d'entrée */
+        .form-group {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .login-options { animation: fadeInUp 0.6s ease 0.3s forwards; opacity: 0; }
+        .login-button { animation: fadeInUp 0.6s ease 0.4s forwards; opacity: 0; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo en haut à gauche -->
+    <div class="page-logo">
+        <img src="/images/menara-logo.png" alt="Ménara Holding">
+    </div>
+
+    <!-- Particules d'arrière-plan -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo et titre - Version simplifiée -->
+            <div class="logo-section">
+                <h1 class="login-title">Connexion</h1>
+                <p class="login-subtitle">Accédez à votre espace de gestion</p>
+                <p class="company-name">Ménara Holding</p>
+            </div>
+
+            <!-- Messages d'erreur/succès -->
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-message">
+                    ⚠️ <%= error %>
+                </div>
+            <% } %>
+
+            <% if (typeof success !== 'undefined' && success) { %>
+                <div class="success-message">
+                    ✅ <%= success %>
+                </div>
+            <% } %>
+
+            <!-- Formulaire de connexion -->
+            <form action="/login" method="POST" class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                        👤 Nom d'utilisateur
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Entrez votre nom d'utilisateur"
+                        value="<%= typeof formData !== 'undefined' && formData.username ? formData.username : '' %>"
+                        required
+                        autocomplete="username"
+                    >
+                    <span class="input-icon">👤</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        🔒 Mot de passe
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Entrez votre mot de passe"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <span class="input-icon">🔒</span>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" value="1">
+                        <span>Se souvenir de moi</span>
+                    </label>
+                    <a href="/forgot-password" class="forgot-password">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
+                <button type="submit" class="login-button" id="loginBtn">
+                    <span class="button-text">Se connecter</span>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>🔐 Connexion sécurisée SSL</p>
+                <div class="version-info">
+                    Version 2.0 | © 2025 Ménara Holding
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const inputs = document.querySelectorAll('.form-input');
+
+            // Animation de focus sur les inputs
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+
+            // Gestion de la soumission du formulaire
+            form.addEventListener('submit', function(e) {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+
+                // Validation côté client
+                if (!username || !password) {
+                    e.preventDefault();
+                    showError('Veuillez remplir tous les champs');
+                    return;
+                }
+
+                if (password.length < 3) {
+                    e.preventDefault();
+                    showError('Le mot de passe doit contenir au moins 3 caractères');
+                    return;
+                }
+
+                // Animation de chargement
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span class="spinner"></span>Connexion en cours...';
+            });
+
+            // Fonction pour afficher les erreurs
+            function showError(message) {
+                // Supprimer les anciens messages d'erreur
+                const existingError = document.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                // Créer un nouveau message d'erreur
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = '⚠️ ' + message;
+
+                // Insérer avant le formulaire
+                const logoSection = document.querySelector('.logo-section');
+                logoSection.insertAdjacentElement('afterend', errorDiv);
+            }
+
+            // Animation des particules (optionnelle)
+            createFloatingParticles();
+        });
+
+        // Fonction pour créer des particules flottantes supplémentaires
+        function createFloatingParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% de chance
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.width = particle.style.height = (Math.random() * 15 + 10) + 'px';
+                    particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    // Supprimer la particule après l'animation
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 7000);
+                }
+            }, 2000);
+        }
+
+        // Gestion des raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            // Enter pour soumettre
+            if (e.key === 'Enter' && document.activeElement.tagName !== 'BUTTON') {
+                document.getElementById('loginBtn').click();
+            }
+        });
+
+        // Auto-focus sur le premier champ
+        window.onload = function() {
+            document.getElementById('username').focus();
+        };
+    </script>
+</body>
+</html>

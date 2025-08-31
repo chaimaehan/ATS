@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Postuler à <%= offre.titre %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .container {
+      max-width: 700px;
+    }
+    
+    h1 {
+      color: var(--primary);
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 70px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    
+    .form-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      margin-top: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    
+    .form-control, .form-control:focus {
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 15px;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .btn-success {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border: none;
+      padding: 10px 25px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      border: none;
+      padding: 10px 25px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .file-label {
+      display: block;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 2px dashed #dee2e6;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-label:hover {
+      background: #e9ecef;
+      border-color: var(--accent);
+    }
+    
+    .file-input {
+      display: none;
+    }
+  </style>
+</head>
+<body class="container mt-5">
+  <h1 class="mb-4">📄 Postuler à : <%= offre.titre %></h1>
+
+  <div class="form-container">
+    <form action="/offres/<%= offre.id %>/postuler" method="POST" enctype="multipart/form-data">
+      <div class="mb-4">
+        <label for="nom" class="form-label">Nom complet</label>
+        <input type="text" class="form-control" id="nom" name="nom" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="email" class="form-label">Adresse e-mail</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="message" class="form-label">Message</label>
+        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">CV (PDF ou texte)</label>
+        <label for="cv" class="file-label">
+          <span id="file-name">Glissez-déposez votre fichier ou cliquez pour sélectionner</span>
+        </label>
+        <input type="file" class="file-input" id="cv" name="cv" accept=".pdf,.txt" required>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <button type="submit" class="btn btn-success">Envoyer ma candidature</button>
+        <a href="/offres" class="btn btn-secondary">Retour aux offres</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Script pour afficher le nom du fichier sélectionné
+    const fileInput = document.getElementById('cv');
+    const fileName = document.getElementById('file-name');
+    
+    fileInput.addEventListener('change', function(e) {
+      if(this.files.length > 0) {
+        fileName.textContent = this.files[0].name;
+      } else {
+        fileName.textContent = 'Glissez-déposez votre fichier ou cliquez pour sélectionner';
+      }
+    });
+    
+    // Gestion du drag and drop
+    const fileLabel = document.querySelector('.file-label');
+    
+    fileLabel.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileLabel.style.borderColor = '#4361ee';
+      fileLabel.style.backgroundColor = '#e6f0ff';
+    });
+    
+    fileLabel.addEventListener('dragleave', () => {
+      fileLabel.style.borderColor = '#dee2e6';
+      fileLabel.style.backgroundColor = '#f8f9fa';
+    });
+    
+    fileLabel.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileInput.files = e.dataTransfer.files;
+      fileName.textContent = e.dataTransfer.files[0].name;
+      fileLabel.style.borderColor = '#dee2e6';
+      fileLabel.style.backgroundColor = '#f8f9fa';
+    });
+  </script>
+</body>
+</html>

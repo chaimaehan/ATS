@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Uploader un CV avec Mots-Clés</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --card-bg: #ffffff;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f0f4f8 0%, #e6f0ff 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #2d3748;
+    }
+    
+    .upload-container {
+      max-width: 700px;
+      width: 100%;
+    }
+    
+    .upload-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .upload-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      z-index: 2;
+    }
+    
+    h2 {
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 35px;
+      text-align: center;
+      position: relative;
+      padding-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    
+    .upload-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+    }
+    
+    .upload-icon i {
+      color: white;
+      font-size: 2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 12px;
+      display: block;
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .form-label i {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+    
+    .file-upload-container {
+      border: 2px dashed #cbd5e0;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .file-upload-container:hover, .file-upload-container.dragover {
+      border-color: var(--accent);
+      background: rgba(72, 149, 239, 0.05);
+    }
+    
+    .file-upload-container input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .file-upload-text {
+      margin-bottom: 15px;
+      color: #4a5568;
+    }
+    
+    .file-upload-text i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+    
+    .file-upload-subtext {
+      font-size: 0.9rem;
+      color: #718096;
+    }
+    
+    .file-info {
+      background: rgba(72, 149, 239, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .file-info i {
+      color: var(--accent);
+      margin-right: 10px;
+    }
+    
+    .tagify {
+      --tag-bg: var(--accent);
+      --tag-hover: #3a7bd5;
+      --tag-text-color: white;
+      --tags-border-color: #e2e8f0;
+      --tag-remove-btn-color: white;
+      --tag-remove-btn-bg--hover: #f72585;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 15px;
+      transition: all 0.3s;
+    }
+    
+    .tagify:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+    }
+    
+    .tagify__input::before {
+      color: #a0aec0;
+    }
+    
+    .tagify__tag > div {
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-weight: 500;
+    }
+    
+    .tagify__tag__removeBtn {
+      opacity: 1;
+      margin-left: 8px;
+      font-size: 0.9em;
+    }
+    
+    .btn-upload {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border: none;
+      padding: 15px;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(67, 97, 238, 0.3);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1.1rem;
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .btn-upload:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+    }
+    
+    .info-box {
+      background: rgba(72, 149, 239, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      border-left: 4px solid var(--accent);
+    }
+    
+    .info-box i {
+      color: var(--accent);
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .info-box p {
+      margin: 0;
+      color: #4a5568;
+    }
+    
+    @media (max-width: 768px) {
+      .upload-card {
+        padding: 30px 20px;
+      }
+      
+      h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <div class="upload-card">
+      <div class="upload-icon">
+        <i class="fas fa-file-upload"></i>
+      </div>
+      
+      <h2><i class="fas fa-cloud-upload-alt"></i> Uploader un CV avec Mots-Clés</h2>
+      
+      <form action="/upload" method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-file-pdf"></i> Fichier CV (.pdf uniquement)
+          </label>
+          
+          <div class="file-upload-container" id="dropZone">
+            <input type="file" id="cv" name="cv" accept=".pdf" required>
+            <div class="file-upload-text">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <h5>Glissez-déposez votre CV ici</h5>
+              <p class="file-upload-subtext">ou cliquez pour sélectionner un fichier</p>
+            </div>
+            <div class="file-info" id="fileInfo">
+              <i class="fas fa-file-pdf"></i>
+              <span id="fileName"></span> (<span id="fileSize"></span>)
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-tags"></i> Mots-clés
+          </label>
+          <input id="keywords" name="keywords" placeholder="Ex : Java, Python, SQL, Gestion de projet..." class="form-control">
+          <small class="form-text text-muted">Appuyez sur Entrée ou Tab après chaque mot-clé</small>
+        </div>
+
+        <button type="submit" class="btn-upload">
+          <i class="fas fa-upload"></i> Uploader le CV
+        </button>
+      </form>
+      
+      <div class="info-box">
+        <i class="fas fa-lightbulb"></i>
+        <p>
+          <strong>Conseil :</strong> Ajoutez des mots-clés pertinents pour améliorer la recherche et le matching avec les offres d'emploi. 
+          Incluez des compétences techniques, des langues parlées, des certifications et des domaines d'expertise.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialiser Tagify
+      const tagify = new Tagify(document.querySelector('input[name=keywords]'), {
+        dropdown: {
+          enabled: 0 // désactiver le dropdown
+        },
+        pattern: /^[a-zA-Z0-9À-ÿ\s\-_]{2,20}$/,
+        maxTags: 15,
+        editTags: false,
+        duplicates: false,
+        backspace: 'edit',
+        placeholder: "Ex : Java, Python, SQL, Gestion de projet...",
+        transformTag: function(tagData) {
+          tagData.value = tagData.value.replace(/[^a-zA-Z0-9À-ÿ\s\-_]/g, '');
+        }
+      });
+      
+      // Gestion du dropzone
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.querySelector('#dropZone input[type=file]');
+      const fileInfo = document.getElementById('fileInfo');
+      const fileName = document.getElementById('fileName');
+      const fileSize = document.getElementById('fileSize');
+      
+      // Événements pour le drag and drop
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        dropZone.classList.add('dragover');
+      }
+      
+      function unhighlight() {
+        dropZone.classList.remove('dragover');
+      }
+      
+      // Gérer le drop de fichier
+      dropZone.addEventListener('drop', handleDrop, false);
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+      }
+      
+      // Gérer la sélection de fichier
+      fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+      });
+      
+      function handleFiles(files) {
+        if (files.length > 0) {
+          const file = files[0];
+          
+          // Vérifier le type de fichier
+          if (file.type !== 'application/pdf') {
+            showError('Veuillez sélectionner un fichier PDF');
+            return;
+          }
+          
+          // Vérifier la taille du fichier (max 5MB)
+          if (file.size > 5 * 1024 * 1024) {
+            showError('Le fichier est trop volumineux (max 5MB)');
+            return;
+          }
+          
+          // Afficher les informations sur le fichier
+          fileName.textContent = file.name;
+          fileSize.textContent = formatFileSize(file.size);
+          fileInfo.style.display = 'flex';
+        }
+      }
+      
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+      
+      function showError(message) {
+        const errorElement = document.createElement('div');
+        errorElement.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i> ${message}`;
+        errorElement.style.position = 'fixed';
+        errorElement.style.top = '20px';
+        errorElement.style.left = '50%';
+        errorElement.style.transform = 'translateX(-50%)';
+        errorElement.style.backgroundColor = '#fff5f5';
+        errorElement.style.color = '#e53e3e';
+        errorElement.style.padding = '15px 25px';
+        errorElement.style.borderRadius = '8px';
+        errorElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+        errorElement.style.zIndex = '1000';
+        errorElement.style.fontWeight = '600';
+        errorElement.style.display = 'flex';
+        errorElement.style.alignItems = 'center';
+        errorElement.style.animation = 'fadeIn 0.3s ease';
+        
+        document.body.appendChild(errorElement);
+        
+        setTimeout(() => {
+          errorElement.style.animation = 'fadeOut 0.5s ease';
+          setTimeout(() => {
+            document.body.removeChild(errorElement);
+          }, 500);
+        }, 3000);
+      }
+      
+      
+      // Validation du formulaire
+      const form = document.getElementById('uploadForm');
+      form.addEventListener('submit', function(e) {
+        const fileInput = document.getElementById('cv');
+        const keywordsInput = document.querySelector('input[name=keywords]');
+        
+        // Vérifier si un fichier est sélectionné
+        if (!fileInput.files || fileInput.files.length === 0) {
+          e.preventDefault();
+          showError('Veuillez sélectionner un fichier PDF');
+          return;
+        }
+        
+        // Vérifier le type de fichier
+        const file = fileInput.files[0];
+        if (file.type !== 'application/pdf') {
+          e.preventDefault();
+          showError('Veuillez sélectionner un fichier PDF');
+          return;
+        }
+        
+        // Vérifier si au moins un mot-clé est saisi
+        if (!keywordsInput.value || keywordsInput.value.trim() === '') {
+          e.preventDefault();
+          showError('Veuillez ajouter au moins un mot-clé');
+          return;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
